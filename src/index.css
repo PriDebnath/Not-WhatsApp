@@ -56,7 +56,7 @@ form {
 @media screen and (max-width: 600px) {
   .message {
     padding: 1% 5% 3% 5%;
-    background: #34b7f1;
+    
   }
 }
 small {
