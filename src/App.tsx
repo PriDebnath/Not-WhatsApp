@@ -16,6 +16,9 @@ function App() {
       time: new Date().toLocaleTimeString(),
     },
   ]);
+let [documentHeight,setDocumentHeight]
+  =useState(document.body.clientHeight)
+
   let [user, setUser] = useState("guest");
   let [inputValue, setInputValue] = useState("");
   let [userNameChangeCont, setUserNameChangeCont] = useState(0);
@@ -26,11 +29,20 @@ function App() {
       console.log(resData);
       console.log(data);
     });
+ setDocumentHeight(documentHeight+100)
     window.scrollTo({
-      top: document.body.clientHeight * 1000,
+      top:  documentHeight  ,
       behavior: "smooth",
     });
   }, [socket, data.length]);
+
+useEffect(()=>{
+ window.scrollTo({
+ top :documentHeight,
+ behavior : 'smooth'})
+  },[inputValue])
+
+
   //console.log(data)
 
   //console.log(socket)
