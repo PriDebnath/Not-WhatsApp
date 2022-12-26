@@ -68,6 +68,16 @@ function App() {
   }, []);
 
   /*
+=======
+    },
+  ]);
+let [documentHeight,setDocumentHeight]
+  =useState(document.body.clientHeight)
+
+  let [user, setUser] = useState("guest");
+  let [inputValue, setInputValue] = useState("");
+  let [userNameChangeCont, setUserNameChangeCont] = useState(0);
+>>>>>>> 9b3d7867d8b14f75bca6dde5e41c89bc903e5566
   useEffect(() => {
     socket.on("receive_message", (resData: any) => {
       setData([...data, resData]);
@@ -75,11 +85,20 @@ function App() {
       console.log(resData);
       console.log(data);
     });
+ setDocumentHeight(documentHeight+100)
     window.scrollTo({
-      top: document.body.clientHeight * 1000,
+      top:  documentHeight  ,
       behavior: "smooth",
     });
   }, [socket, data.length]);
+
+useEffect(()=>{
+ window.scrollTo({
+ top :documentHeight,
+ behavior : 'smooth'})
+  },[inputValue])
+
+
   //console.log(data)
 
   //console.log(socket)

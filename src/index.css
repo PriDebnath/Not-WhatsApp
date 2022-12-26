@@ -108,6 +108,12 @@ form {
   border-radius: 0.3rem;
 }
 
+@media screen and (max-width: 600px) {
+  .message {
+    padding: 1% 5% 3% 5%;
+    
+  }
+}
 small {
   bottom: 0;
   position: absolute;
