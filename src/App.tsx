@@ -1,24 +1,73 @@
 import { useState, useEffect } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+//components
+import ChatPage from "./components/ChatPage";
+import Home from "./components/Home";
+import Nav from "./components/Nav";
+//icons
 import SendIcon from "@mui/icons-material/Send";
 import DoneAllTwoToneIcon from "@mui/icons-material/DoneAllTwoTone";
 import io from "socket.io-client";
-import "./App.css";
 
-const socket = io("http://localhost:3001");
+//urls
+import URLS from "./urls";
+import authHelpers from "./authHelpers";
 
+const socket = io(URLS.SERVER_URL);
 
 function App() {
-  let [data, setData] = useState([
-    {
-      message: "Hello",
-      user: "Pri",
-      fromClient: false,
+  let [data, setData]: any = useState({
+    global: [
+      {
+        message: "Hello",
+        id: "global",
+        user: "Pri",
+        fromClient: false,
+        time: new Date().toLocaleTimeString(),
+      },
+    ],
+  });
+
+  let user = authHelpers.getDataFromLocalStorage("user") || "guest";
+
+  useEffect(() => {
+    socket.on("receive_message", (resData) => {
+      console.log("received");
+      setData((preData: any) => {
+        return {
+          ...preData,
+          [resData.receiverId]: preData[resData.receiverId]
+            ? [...preData[resData.receiverId], resData]
+            : [resData],
+        };
+      });
+      console.log({ resData });
+      console.log(data);
+    });
+  }, [socket]);
+
+  let [ids, setIds]: any = useState({});
+  useEffect(() => {
+    fetch(URLS.SERVER_URL)
+      .then((res) => res.json())
+      .then((data) => {
+        //console.log(Object.values(data))
+        delete data[socket.id];
+        setIds(data);
+      });
+  }, []);
+
+  useEffect(() => {
+    socket.emit("send_message", {
+      user,
+      receiverId: "global",
+      message: `${user} - joined`,
       time: new Date().toLocaleTimeString(),
-    },
-  ]);
-  let [user, setUser] = useState("guest");
-  let [inputValue, setInputValue] = useState("");
-  let [userNameChangeCont, setUserNameChangeCont] = useState(0);
+      id: socket.id,
+    });
+  }, []);
+
+  /*
   useEffect(() => {
     socket.on("receive_message", (resData: any) => {
       setData([...data, resData]);
@@ -63,69 +112,40 @@ function App() {
       alert(" Name can be change 3 times only");
     }
   };
+
+  */
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-      }}
-    >
-      <nav>{user} in global chat not whatsapp</nav>
-      <div className="user" onClick={() => storeUser()}>
-        <p>👤</p>
-        <p>{user.slice(0)}</p>
-      </div>
-
-      {data.map((d, i) => {
-        return (
-          <div
-            className="message_con"
-            style={{
-              justifyContent: d.fromClient ? "flex-end" : "flex-start",
-            }}
-            key={i}
-          >
-            <p
-              className="message"
-              key={i}
-              style={{
-                background: d.fromClient ? "#075E54" : "",
-                textAlign: d.fromClient ? "right" : "left",
-              }}
-            >
-              {d.message}
-
-              <small>
-                {d.user.slice(0, 8) + " - " + d.time.slice(0, 4)}{" "}
-                {d.fromClient && (
-                  <DoneAllTwoToneIcon
-                    sx={{
-                      fontSize: "0.6rem",
-                    }}
-                    className="DoneAllTwoToneIcon"
-                  />
-                )}
-              </small>
-            </p>
-          </div>
-        );
-      })}
-      <div className="send_message_con">
-        <input
-          className="send_message_input"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          type="text"
-          placeholder="type somthing . . ."
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <Home
+              socket={socket}
+              data={data}
+              setData={setData}
+              ids={ids}
+              setIds={setIds}
+            />
+          }
         />
-        <button
-          className="send_message_button"
-          type="submit"
-          onClick={(e) => sendMessage(e)}
-        >
-          <SendIcon />
-        </button>
-      </div>
-    </form>
+
+        <Route
+          path=":receiverId"
+          element={
+            <ChatPage
+              socket={socket}
+              data={data}
+              setData={setData}
+              ids={ids}
+              setIds={setIds}
+            />
+          }
+        />
+      </Routes>
+
+      <></>
+    </BrowserRouter>
   );
 }
 export default App;
