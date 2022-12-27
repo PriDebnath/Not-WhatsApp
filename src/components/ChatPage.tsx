@@ -67,7 +67,7 @@ let ChatPage = (props: any) => {
     fromClient : true,
    })
    
-   // setInputValue("")
+    setInputValue("")
    console.log(jsonData)
    */
     console.log("sent");
