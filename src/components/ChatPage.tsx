@@ -116,7 +116,7 @@ let ChatPage = (props: any) => {
                 <small>
                   {`${d.user}  -  ${
                     d?.id?.slice(0, 2) || ""
-                  }  -  ${d?.time?.slice(0, 4)}`}{" "}
+                  }  -  ${d?.time?.slice(0, 5)}`}{" "}
                   {d.fromClient && (
                     <DoneAllTwoToneIcon
                       sx={{
