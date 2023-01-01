@@ -97,7 +97,7 @@ const Nav = (props: any) => {
               variant="body1"
               component="div"
               onClick={storeUser}
-              sx={{ cursor: "pointer" }}
+              sx={{ cursor: "pointer",padding:"0px 8px" }}
             >
               {user.slice(0, 8)}
             </Typography>
