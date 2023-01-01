@@ -61,18 +61,8 @@ let ChatPage = (props: any) => {
           : [{ ...sendData, fromClient: true }],
       };
     });
-    /*
-   jsonData.addData({
-     ...sendData ,
-    fromClient : true,
-   })
-   
-    setInputValue("")
-   console.log(jsonData)
-   */
+
     console.log("sent");
-    // setDocumentHeight((preHeight) => preHeight + 200);
-    // window.scrollTo({ top: documentHeight, behavior: "smooth" });
     window.scrollTo({
       top: document.body.clientHeight * 1000,
       behavior: "smooth",
