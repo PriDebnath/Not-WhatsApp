@@ -52,7 +52,7 @@ function App() {
         setIds(data);
       })
       .catch((error) => {
-        setStatusText("Server is off , ask  Pri to turn in on");
+        setStatusText("Server is off , ask  Pri to turn it on");
         console.log(error);
       });
   }, []);
