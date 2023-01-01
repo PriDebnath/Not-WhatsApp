@@ -25,7 +25,7 @@ function App() {
     ],
   });
   const [statusText, setStatusText] = useState(
-    "Available member will list here"
+   ""
   );
 
   let user = authHelpers.getDataFromLocalStorage("user") || "guest";
@@ -50,6 +50,7 @@ function App() {
       .then((data) => {
         delete data[socket.id];
         setIds(data);
+        setStatusText( "Available member will list here");
       })
       .catch((error) => {
         setStatusText("Server is off , ask  Pri to turn it on");
