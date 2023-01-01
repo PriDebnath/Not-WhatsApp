@@ -176,7 +176,7 @@ small {
 @media screen and (max-width: 600px) {
   .message {
     padding: 1% 5% 3% 5%;
-
+    min-width: 25%;
     margin: 3%;
   }
   form {
