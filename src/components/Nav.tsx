@@ -65,10 +65,10 @@ export default function Nav(props: any) {
             />
           </IconButton>
           <div className="appBar_div">
-            <Typography variant="h6" component="div">
+            <Typography variant="body1" component="div">
               {receiver ? receiver : "Guest"}
             </Typography>
-            {receiverId == "global" && (
+            {/* {receiverId == "global" && (
               <Paper
                 sx={{
                   maxWidth: "40%",
@@ -78,29 +78,30 @@ export default function Nav(props: any) {
                   color: "white",
                   padding: "1%",
                   boxShadow: " inset 0px 0px 0.4rem black",
-                  "&:hover": {
-                    boxShadow: " 0px 0px 0.4rem black",
-                  },
+                  // "&:hover": {
+                  //   boxShadow: " 0px 0px 0.4rem black",
+                  // },
                 }}
               >
                 {Object.values(ids).map((id: any) => {
                   return (
-                    <List
-                      sx={{
-                        fontSize: "10px",
-                        minWidth: "50px",
-                        padding: "0px 10px",
-                      }}
+                    <span
+                      // sx={{
+                      //   fontSize: "10px",
+                      //   // minWidth: "50px",
+                      //   display:"inline",
+                      //   padding: "0px 10px",
+                      // }}
                     >
                       {id?.user} ,{" "}
-                    </List>
+                    </span>
                   );
                 })}
               </Paper>
-            )}
+            )} */}
 
             <Typography
-              variant="h6"
+              variant="body1"
               component="div"
               onClick={storeUser}
               sx={{ cursor: "pointer" }}

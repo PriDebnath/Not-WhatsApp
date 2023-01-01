@@ -24,8 +24,20 @@ import authHelpers from "../authHelpers";
 import URLS from "../urls";
 
 let Home = (props: any) => {
-  const { socket, data, setData, ids, setIds }: any = props;
-  socket.connect();
+  const { socket, data, setData, ids, setIds,statusText,setStatusText }: any = props;
+  try {
+    socket.connect();
+  } catch (error) {
+    console.log(error);
+  }
+  const [dots, setDots] = useState([" . ",]);
+  
+//  const intervalFun =  setInterval(() => {
+//     setDots([...dots, " . "]);
+//     console.log("called");
+
+//   }, 1000);
+ 
 
   // authHelpers.saveDataInLocalStorage("socketId", socket.id);
   let user = authHelpers.getDataFromLocalStorage("user") || "guest";
@@ -37,6 +49,9 @@ let Home = (props: any) => {
         //console.log(Object.values(data))
         delete data[socket.id];
         setIds(data);
+      })
+      .catch((error) => {
+        console.log({ error });
       });
   }, [socket, data]);
 
@@ -69,7 +84,7 @@ let Home = (props: any) => {
             </IconButton>
 
             <Link className="link" to={`/${id.id}`}>
-              <Typography variant="h6" component="div">
+              <Typography variant="body1" component="div">
                 {id.user}
                 <Typography variant="h6" sx={{ fontSize: "10px" }}>
                   {data[id.id]?.[data[id.id].length - 1]?.message}
@@ -87,6 +102,21 @@ let Home = (props: any) => {
           </ListItem>
         );
       })}
+      <Typography
+        variant="body1"
+        component="div"
+        sx={{
+          textAlign: "center",
+          marginTop: "40vh",
+        }}
+      >
+        {statusText}
+          {" "}
+        {/* {dots.map((dot: string, i: number) => (
+        ))}  */}
+               <span className="dot">.</span>
+
+      </Typography>
     </List>
   );
 };

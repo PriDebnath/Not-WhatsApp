@@ -27,10 +27,12 @@ function App() {
       },
     ],
   });
+  const [statusText,setStatusText] = useState("Available member will list here")
 
   let user = authHelpers.getDataFromLocalStorage("user") || "guest";
 
   useEffect(() => {
+    
     socket.on("receive_message", (resData) => {
       console.log("received");
       setData((preData: any) => {
@@ -41,9 +43,7 @@ function App() {
             : [resData],
         };
       });
-      console.log({ resData });
-      console.log(data);
-    });
+    })
   }, [socket]);
 
   let [ids, setIds]: any = useState({});
@@ -54,17 +54,25 @@ function App() {
         //console.log(Object.values(data))
         delete data[socket.id];
         setIds(data);
-      });
+      }).catch((error)=>{
+        setStatusText("Server is off now contact Pri")
+        console.log(error)
+      })
   }, []);
 
   useEffect(() => {
-    socket.emit("send_message", {
+    try {
+       socket.emit("send_message", {
       user,
       receiverId: "global",
       message: `${user} - joined`,
       time: new Date().toLocaleTimeString(),
       id: socket.id,
-    });
+    })
+    } catch (error) {
+      console.log(error)
+    }
+   
   }, []);
 
   /*
@@ -145,6 +153,8 @@ useEffect(()=>{
               setData={setData}
               ids={ids}
               setIds={setIds}
+              statusText={statusText}
+              setStatusText={setStatusText}
             />
           }
         />
