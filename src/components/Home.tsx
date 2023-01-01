@@ -24,8 +24,10 @@ let Home = (props: any) => {
       .then((data) => {
         delete data[socket.id];
         setIds(data);
+        setStatusText( "Available member will list here");
       })
       .catch((error) => {
+        setStatusText("Server is off , ask  Pri to turn it on");
         console.log({ error });
       });
   }, [socket, data]);
