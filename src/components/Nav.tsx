@@ -51,7 +51,7 @@ export default function Nav(props: any) {
   return (
     <Box sx={{ flexGrow: 1, background: "#273443" }} className="nav">
       <AppBar position="static" sx={{ background: "#273443" }}>
-        <Toolbar>
+        <Toolbar sx={{padding:"0px"}}>
           <IconButton>
             <ArrowBackIcon
               sx={{ color: "white" }}
@@ -68,7 +68,7 @@ export default function Nav(props: any) {
             <Typography variant="h6" component="div">
               {receiver ? receiver : "Guest"}
             </Typography>
-            {receiverId == "global" && (
+         {/*   {receiverId == "global" && (
               <Paper
                 sx={{
                   maxWidth: "40%",
@@ -98,7 +98,7 @@ export default function Nav(props: any) {
                 })}
               </Paper>
             )}
-
+*/}
             <Typography
               variant="h6"
               component="div"
