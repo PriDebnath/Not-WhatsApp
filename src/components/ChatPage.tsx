@@ -58,6 +58,7 @@ let ChatPage = (props: any) => {
       top: document.body.clientHeight * 1000,
       behavior: "smooth",
     });
+    setInputValue("")
   };
 
   return (
