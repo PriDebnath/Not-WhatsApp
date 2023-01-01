@@ -1,52 +1,27 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import io from "socket.io-client";
-
-// import { useSelector, useDispatch } from "react-redux";
-// import { storeMessage } from "../state4/userSlice"
-// import jsonData from "../state4/data"
-
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
-import Divider from "@mui/material/Divider";
-import ListItemText from "@mui/material/ListItemText";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
-
 import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-// icons
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-
 import authHelpers from "../authHelpers";
 
 import URLS from "../urls";
 
 let Home = (props: any) => {
-  const { socket, data, setData, ids, setIds,statusText,setStatusText }: any = props;
+  const { socket, data, setData, ids, setIds, statusText, setStatusText }: any =
+    props;
   try {
     socket.connect();
   } catch (error) {
     console.log(error);
   }
-  const [dots, setDots] = useState([" . ",]);
-  
-//  const intervalFun =  setInterval(() => {
-//     setDots([...dots, " . "]);
-//     console.log("called");
-
-//   }, 1000);
- 
-
-  // authHelpers.saveDataInLocalStorage("socketId", socket.id);
-  let user = authHelpers.getDataFromLocalStorage("user") || "guest";
 
   useEffect(() => {
     fetch(URLS.SERVER_URL)
       .then((res) => res.json())
       .then((data) => {
-        //console.log(Object.values(data))
         delete data[socket.id];
         setIds(data);
       })
@@ -55,16 +30,6 @@ let Home = (props: any) => {
       });
   }, [socket, data]);
 
-  useEffect(() => {
-    //socket.emit("send_message",{id:socket.id})
-  }, []);
-  // useEffect(() => {
-  //   socket.on("receive_message", () => {
-  //     console.log("received message");
-  //   });
-  // }, [socket]);
-
-  //console.log({ids})
   return (
     <List sx={{ width: "100%", bgcolor: "#131e1e", minHeight: "100vh" }}>
       {Object.values(ids).map((id: any, i: number) => {
@@ -111,11 +76,7 @@ let Home = (props: any) => {
         }}
       >
         {statusText}
-          {" "}
-        {/* {dots.map((dot: string, i: number) => (
-        ))}  */}
-               <span className="dot">.</span>
-
+        <span className="dot"> .</span>
       </Typography>
     </List>
   );
