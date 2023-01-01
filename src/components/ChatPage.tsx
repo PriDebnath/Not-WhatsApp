@@ -7,34 +7,28 @@ import Nav from "./Nav";
 import SendIcon from "@mui/icons-material/Send";
 import DoneAllTwoToneIcon from "@mui/icons-material/DoneAllTwoTone";
 
+
+
 let ChatPage = (props: any) => {
+
   const { socket, data, setData, ids, setIds }: any = props;
 
   let user = authHelpers.getDataFromLocalStorage("user") || "guest";
 
   let { receiverId }: any = useParams();
-  console.log({ receiverId });
 
   let [inputValue, setInputValue] = useState("");
 
-  let [documentHeight, setDocumentHeight] = useState(
-    document.body.clientHeight + 100
-  );
-
   useEffect(() => {
     socket.on("receive_message", (resData: any) => {
-      setDocumentHeight((preHeight) => preHeight + 100);
-      console.log("received in chat");
-      // window.scrollTo({ top: documentHeight, behavior: "smooth" });
       window.scrollTo({
         top: document.body.clientHeight * 1000,
         behavior: "smooth",
       });
-      console.log({ data });
     });
   }, [socket]);
 
-  //console.log(socket)
+  
   let sendMessage = (e: any) => {
     let sendData = {
       message: inputValue,
@@ -45,9 +39,7 @@ let ChatPage = (props: any) => {
     };
 
     socket.emit("send_message", sendData);
-    console.log({ sendData });
     setData((preData: any) => {
-      console.log({ preData });
       return {
         ...preData,
         [receiverId]: preData[receiverId]
@@ -61,18 +53,7 @@ let ChatPage = (props: any) => {
           : [{ ...sendData, fromClient: true }],
       };
     });
-    /*
-   jsonData.addData({
-     ...sendData ,
-    fromClient : true,
-   })
-   
-    setInputValue("")
-   console.log(jsonData)
-   */
-    console.log("sent");
-    // setDocumentHeight((preHeight) => preHeight + 200);
-    // window.scrollTo({ top: documentHeight, behavior: "smooth" });
+
     window.scrollTo({
       top: document.body.clientHeight * 1000,
       behavior: "smooth",

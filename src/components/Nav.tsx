@@ -9,31 +9,24 @@ import MenuIcon from "@mui/icons-material/Menu";
 // icons
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-
 import { useNavigate } from "react-router-dom";
-
 import authHelpers from "../authHelpers";
-
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import URLS from "../urls";
 
-export default function Nav(props: any) {
-  let { receiverId }: any = useParams();
-
+const Nav = (props: any) => {
   const { receiver, ids, setIds, data, socket } = props;
   const navigate = useNavigate();
 
   const [user, setUser] = useState(
     authHelpers.getDataFromLocalStorage("user") || "Guest"
   );
+
   useEffect(() => {}, [user]);
   let storeUser = () => {
     let promptValue = prompt("Your name ?")?.slice(0, 8);
 
     if (promptValue) {
-      console.log(promptValue);
-
       authHelpers.saveDataInLocalStorage("user", promptValue);
       setUser(promptValue);
     }
@@ -43,7 +36,7 @@ export default function Nav(props: any) {
     fetch(URLS.SERVER_URL)
       .then((res) => res.json())
       .then((data) => {
-        //console.log(Object.values(data))
+        //console.log(Object.values(daxta))
         delete data[socket.id];
         setIds(data);
       });
@@ -51,7 +44,7 @@ export default function Nav(props: any) {
   return (
     <Box sx={{ flexGrow: 1, background: "#273443" }} className="nav">
       <AppBar position="static" sx={{ background: "#273443" }}>
-        <Toolbar sx={{padding:"0px"}}>
+        <Toolbar sx={{ padding: "0px" }}>
           <IconButton>
             <ArrowBackIcon
               sx={{ color: "white" }}
@@ -65,10 +58,10 @@ export default function Nav(props: any) {
             />
           </IconButton>
           <div className="appBar_div">
-            <Typography variant="h6" component="div">
+            <Typography variant="body1" component="div">
               {receiver ? receiver : "Guest"}
             </Typography>
-         {/*   {receiverId == "global" && (
+            {/* {receiverId == "global" && (
               <Paper
                 sx={{
                   maxWidth: "40%",
@@ -78,29 +71,30 @@ export default function Nav(props: any) {
                   color: "white",
                   padding: "1%",
                   boxShadow: " inset 0px 0px 0.4rem black",
-                  "&:hover": {
-                    boxShadow: " 0px 0px 0.4rem black",
-                  },
+                  // "&:hover": {
+                  //   boxShadow: " 0px 0px 0.4rem black",
+                  // },
                 }}
               >
                 {Object.values(ids).map((id: any) => {
                   return (
-                    <List
-                      sx={{
-                        fontSize: "10px",
-                        minWidth: "50px",
-                        padding: "0px 10px",
-                      }}
+                    <span
+                      // sx={{
+                      //   fontSize: "10px",
+                      //   // minWidth: "50px",
+                      //   display:"inline",
+                      //   padding: "0px 10px",
+                      // }}
                     >
                       {id?.user} ,{" "}
-                    </List>
+                    </span>
                   );
                 })}
               </Paper>
-            )}
-*/}
+            )} */}
+
             <Typography
-              variant="h6"
+              variant="body1"
               component="div"
               onClick={storeUser}
               sx={{ cursor: "pointer" }}
@@ -112,4 +106,6 @@ export default function Nav(props: any) {
       </AppBar>
     </Box>
   );
-}
+};
+
+export default Nav;
