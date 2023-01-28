@@ -107,24 +107,32 @@ form {
   display: flex;
   align-items: flex-end;
   padding: 0 1%;
+  position: relative;
 }
 
-.message_con img {
+.message_con img,video {
   border-radius: 0.2rem;
   width: 100%;
   display: block;
+  cursor: pointer;
 }
-/* .message_con img:hover{
+/* 
+.message_con img:hover{
 position: absolute;
+top: 0;
+left: 0;
 width: 100vw;
-top : -100% ;
-left: -100%; 
-}
+ top : -100% ;
+left:  -22%; 
+} 
+*/
+
+
 .fullScreen{
 
 }
 
-*/
+
 
 .message {
   padding: 1% 1% 1.5% 1%;
@@ -192,6 +200,7 @@ display: flex;
   width: 100%;
   /* border: 2px solid var(--brand-dark-green); */
   border: none;
+  outline: white;
   background: var(--brand-gray);
   border-radius: 5rem;
 }
