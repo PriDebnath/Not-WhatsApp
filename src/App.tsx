@@ -17,6 +17,7 @@ function App() {
     global: [
       {
         message: "Hello",
+        blob : null ,
         id: "global",
         user: "Pri",
         fromClient: false,

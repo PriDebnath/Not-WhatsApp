@@ -1,23 +1,27 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 
 import { useParams } from "react-router-dom";
 import authHelpers from "../authHelpers";
 import Nav from "./Nav";
 //icons
 import SendIcon from "@mui/icons-material/Send";
+import AttachFileIcon from '@mui/icons-material/AttachFile';
 import DoneAllTwoToneIcon from "@mui/icons-material/DoneAllTwoTone";
 
 
 
-let ChatPage = (props: any) => {
+const ChatPage = (props: any) => {
 
   const { socket, data, setData, ids, setIds }: any = props;
 
-  let user = authHelpers.getDataFromLocalStorage("user") || "guest";
+  const user = authHelpers.getDataFromLocalStorage("user") || "guest";
 
-  let { receiverId }: any = useParams();
+  const { receiverId }: any = useParams();
 
-  let [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState("");
+  const [blob,setBlob]=useState(null)
+  const inputRef:any = useRef(null);
+  const [inputType,setInputType] = useState("text")
 
   useEffect(() => {
     socket.on("receive_message", (resData: any) => {
@@ -29,9 +33,10 @@ let ChatPage = (props: any) => {
   }, [socket]);
 
   
-  let sendMessage = (e: any) => {
+  let sendMessage = (blob?: any) => {
     let sendData = {
       message: inputValue,
+      ...(blob && {blob : blob}), 
       user,
       time: new Date().toLocaleTimeString(),
       id: socket.id,
@@ -53,12 +58,34 @@ let ChatPage = (props: any) => {
           : [{ ...sendData, fromClient: true }],
       };
     });
-
+    setInputValue("")
     window.scrollTo({
       top: document.body.clientHeight * 1000,
       behavior: "smooth",
     });
   };
+
+  const handleInputChange = (elm:any)=>{
+    if(elm.type=="text"){
+      setInputValue(elm.value)
+
+    }else{
+      setBlob( inputRef.current.files[0])
+      sendMessage(inputRef.current.files[0])
+      setInputType("text")
+      inputRef.current.type="text"
+
+    }
+
+  }
+
+ const handleAttachFileClick =(e:any)=>{
+  console.log();
+  inputRef.current.type="file"
+  inputRef.current.click()
+
+  
+ }
 
   return (
     <div className="chatPage">
@@ -76,6 +103,12 @@ let ChatPage = (props: any) => {
         }}
       >
         {data[receiverId]?.map((d: any, i: number) => {
+          let newBlob  = d.blob && new Blob([d.blob])
+          console.log({newBlob});
+          
+          const imgUrl = newBlob &&  window.URL.createObjectURL(newBlob)
+          console.log({imgUrl});
+          
           return (
             <div
               className="message_con"
@@ -84,6 +117,7 @@ let ChatPage = (props: any) => {
               }}
               key={i}
             >
+           
               <p
                 className="message"
                 key={i}
@@ -93,7 +127,7 @@ let ChatPage = (props: any) => {
                 }}
               >
                 {d.message}
-
+   { imgUrl && <img src={imgUrl} alt="image" /> }
                 <small>
                   {`${d.user}  -  ${
                     d?.id?.slice(0, 2) || ""
@@ -113,21 +147,32 @@ let ChatPage = (props: any) => {
         })}
 
         <div className="send_message_con">
-          <input
+        
+         
+          <div className="send_message_input_con">
+  <input
             className="send_message_input"
             value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            type="text"
+            ref={inputRef}
+            onChange={(e)=>{
+              handleInputChange(e.target)
+            }}
+            type={inputType}
             placeholder="type somthing . . ."
             autoFocus
           />
+   <AttachFileIcon  className="attachFileIcon_con_icon" 
+            onClick={handleAttachFileClick}
+            />
+          </div>
           <button
             className="send_message_button"
             type="submit"
-            onClick={(e) => sendMessage(e)}
+            onClick={(e) => sendMessage()}
           >
             <SendIcon />
-          </button>
+          </button> 
+         
         </div>
       </form>
     </div>

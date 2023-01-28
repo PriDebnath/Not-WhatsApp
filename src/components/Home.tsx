@@ -17,7 +17,7 @@ let Home = (props: any) => {
   } catch (error) {
     console.log(error);
   }
-
+ 
   useEffect(() => {
     fetch(URLS.SERVER_URL)
       .then((res) => res.json())
@@ -31,7 +31,7 @@ let Home = (props: any) => {
         console.log({ error });
       });
   }, [socket, data]);
-
+  
   return (
     <List sx={{ width: "100%", bgcolor: "#131e1e", minHeight: "100vh" }}>
       {Object.values(ids).map((id: any, i: number) => {
