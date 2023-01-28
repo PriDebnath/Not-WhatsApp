@@ -37,7 +37,7 @@ const ChatPage = (props: any) => {
 
 
   let sendMessage = (blob?: any) => {
-
+   console.log({blob})
     let sendData = {
       message: inputValue,
       ...(blob && { blob: blob, blobType: blob.type.split('/')[0] }),
@@ -175,9 +175,9 @@ const ChatPage = (props: any) => {
                         <img src={url} alt="image"
                           onClick={(e) => {
 
-                            // setDialogContent(e.currentTarget)
-                            // setDialogContent(<><img src={url} alt="image" /></>)
-                            // setOpenFullImage(!openFullImage)
+                             setDialogContent(e.currentTarget)
+                             setDialogContent(<><img src={url} alt="image" /></>)
+                             setOpenFullImage(!openFullImage)
                           }
                           }
                         />
