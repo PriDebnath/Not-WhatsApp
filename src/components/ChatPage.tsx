@@ -38,7 +38,7 @@ const ChatPage = (props: any) => {
 
 
   let sendMessage = (blob?: any) => {
-
+   console.log({blob})
     let sendData = {
       message: inputValue,
       ...(blob && { blob: blob, blobType: blob.type.split('/')[0] }),
