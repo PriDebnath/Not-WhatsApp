@@ -45,10 +45,10 @@ const Nav = (props: any) => {
     <Box sx={{ flexGrow: 1, background: "#273443" }} className="nav">
       <AppBar position="static" sx={{ background: "#273443" }}>
         <Toolbar sx={{ padding: "0px" }}>
-          <IconButton>
+          <IconButton onClick={() => navigate(-1)}>
             <ArrowBackIcon
               sx={{ color: "white" }}
-              onClick={() => navigate(-1)}
+              
             />
             <AccountCircleIcon
               sx={{

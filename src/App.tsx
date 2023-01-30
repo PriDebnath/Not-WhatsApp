@@ -17,6 +17,8 @@ function App() {
     global: [
       {
         message: "Hello",
+        blob : null ,
+        blobType : "" ,
         id: "global",
         user: "Pri",
         fromClient: false,
@@ -25,13 +27,15 @@ function App() {
     ],
   });
   const [statusText, setStatusText] = useState(
-    "Available member will list here"
+   ""
   );
 
   let user = authHelpers.getDataFromLocalStorage("user") || "guest";
 
   useEffect(() => {
     socket.on("receive_message", (resData) => {
+      console.log({resData});
+      
       setData((preData: any) => {
         return {
           ...preData,
@@ -52,7 +56,6 @@ function App() {
         setIds(data);
       })
       .catch((error) => {
-        setStatusText("Server is off , ask  Pri to turn it on");
         console.log(error);
       });
   }, []);

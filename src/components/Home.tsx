@@ -17,19 +17,21 @@ let Home = (props: any) => {
   } catch (error) {
     console.log(error);
   }
-
+ 
   useEffect(() => {
     fetch(URLS.SERVER_URL)
       .then((res) => res.json())
       .then((data) => {
         delete data[socket.id];
         setIds(data);
+        setStatusText( "Available member will list here");
       })
       .catch((error) => {
+        setStatusText("Server is off , ask  Pri to turn it on");
         console.log({ error });
       });
   }, [socket, data]);
-
+  
   return (
     <List sx={{ width: "100%", bgcolor: "#131e1e", minHeight: "100vh" }}>
       {Object.values(ids).map((id: any, i: number) => {
