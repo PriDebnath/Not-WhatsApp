@@ -18,6 +18,7 @@ function App() {
       {
         message: "Hello",
         blob : null ,
+        blobType : "" ,
         id: "global",
         user: "Pri",
         fromClient: false,
@@ -33,6 +34,8 @@ function App() {
 
   useEffect(() => {
     socket.on("receive_message", (resData) => {
+      console.log({resData});
+      
       setData((preData: any) => {
         return {
           ...preData,

@@ -29,6 +29,13 @@ body {
   /* background: url("./assets/HD-wallpaper-whatsapp-background-cool-dark-green-new-theme-whatsapp.jpg"); */
 }
 
+ img,video {
+  border-radius: 0.2rem;
+  width: 100%;
+  display: block;
+  cursor: pointer;
+}
+
 .nav {
   z-index: 2;
   position: fixed;
@@ -110,12 +117,7 @@ form {
   position: relative;
 }
 
-.message_con img,video {
-  border-radius: 0.2rem;
-  width: 100%;
-  display: block;
-  cursor: pointer;
-}
+
 /* 
 .message_con img:hover{
 position: absolute;
@@ -138,7 +140,7 @@ left:  -22%;
   padding: 1% 1% 1.5% 1%;
   min-width: 10%;
   max-width: 65%;
-  position: relative;
+  /* position: relative; */
   background: var(--brand-gray);
   word-wrap: break-word;
   margin: 0.8%;

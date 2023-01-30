@@ -20,7 +20,7 @@ const ChatPage = (props: any) => {
   const user = authHelpers.getDataFromLocalStorage("user") || "guest";
 
   const { receiverId }: any = useParams();
-
+  const [clientHeight,setClientHeight] = useState(document.body.clientHeight)
   const [inputValue, setInputValue] = useState("");
   const [blob, setBlob] = useState(null)
   const inputRef: any = useRef(null);
@@ -28,8 +28,9 @@ const ChatPage = (props: any) => {
 
   useEffect(() => {
     socket.on("receive_message", (resData: any) => {
+      setClientHeight(clientHeight + 1000)
       window.scrollTo({
-        top: document.body.clientHeight * 1000,
+        top: clientHeight + 1000,
         behavior: "smooth",
       });
     });
@@ -63,8 +64,11 @@ const ChatPage = (props: any) => {
       };
     });
     setInputValue("")
+    setClientHeight(clientHeight + 1000)
+
     window.scrollTo({
-      top: document.body.clientHeight * 1000,
+      top: clientHeight + 1000,
+
       behavior: "smooth",
     });
   };
@@ -75,6 +79,7 @@ const ChatPage = (props: any) => {
 
     } else {
       const blobFile = inputRef.current.files[0]
+      console.log({ blobFile });
 
       setBlob(blobFile)
       sendMessage(blobFile)
@@ -103,7 +108,7 @@ const ChatPage = (props: any) => {
   }
 
   console.log({ dialogContent });
-  
+
   // download file feature
 
   const handleFileDownload = (url: any, fileType: string) => {
@@ -174,10 +179,10 @@ const ChatPage = (props: any) => {
                       <>
                         <img src={url} alt="image"
                           onClick={(e) => {
-
-                            // setDialogContent(e.currentTarget)
-                            // setDialogContent(<><img src={url} alt="image" /></>)
-                            // setOpenFullImage(!openFullImage)
+                            console.log(d.blobType)
+                            //  setDialogContent(e.currentTarget)
+                            setDialogContent(<><img src={url} alt="image" /></>)
+                            setOpenFullImage(!openFullImage)
                           }
                           }
                         />
@@ -195,12 +200,14 @@ const ChatPage = (props: any) => {
                       <>
                         <video src={url} controls
                           onClick={(e) => {
-                            setDialogContent(e.currentTarget)
+                            console.log(d.blobType)
+
+                            //  setDialogContent(e.currentTarget)
                             setDialogContent(<video src={url} controls></video>)
                             setOpenFullImage(!openFullImage)
                           }}></video>
                         <DownloadRoundedIcon
-                          sx={downloadIconStyle }
+                          sx={downloadIconStyle}
                           onClick={() => handleFileDownload(url, "mp4")}
                         />
 
@@ -257,14 +264,19 @@ const ChatPage = (props: any) => {
       <Dialog
         fullScreen
         open={openFullImage}
+        // scroll={"paper"}
         // open={true}
         onClose={handleCloseFullImage}
         // TransitionComponent={Transition}
         sx={{
-          background: "#273443",
+          // background: "#273443",
+          // background: "rgba(0,0,0,0.2)",
           "& .MuiPaper-root": {
-            background: "#273443",
+            // background: "#273443",
+            background: "rgba(0,0,0,0.2)",
+
             color: "white",
+            position: "relative",
 
           }
         }}
@@ -277,7 +289,11 @@ const ChatPage = (props: any) => {
             aria-label="close"
           >
             <CloseRoundedIcon
-              sx={{ color: "white", position: "fixed", right: "1rem", top: "1rem", }}
+              sx={{ color: "inherit", background : "white" , position: "fixed", right: "1rem", top: "1rem", borderRadius : "5rem"
+            , "& :hover": {
+color : "red"
+             }
+            }}
             />
           </IconButton>
 
@@ -285,7 +301,17 @@ const ChatPage = (props: any) => {
 
         </Toolbar>
 
-        {dialogContent}
+
+        <div 
+          style={{
+          width: "100vw",
+          position: "absolute",
+          top: "50%",
+          transform: "translate(0,-50%)",
+        }}>
+          {dialogContent}
+
+        </div>
 
       </Dialog>
 
