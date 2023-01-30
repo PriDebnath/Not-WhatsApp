@@ -11,34 +11,26 @@ import SendIcon from "@mui/icons-material/Send";
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import DoneAllTwoToneIcon from "@mui/icons-material/DoneAllTwoTone";
 import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 
 const ChatPage = (props: any) => {
 
   const { socket, data, setData, ids, setIds }: any = props;
-
   const user = authHelpers.getDataFromLocalStorage("user") || "guest";
-
   const { receiverId }: any = useParams();
-  const [clientHeight,setClientHeight] = useState(document.body.clientHeight)
   const [inputValue, setInputValue] = useState("");
-  const [blob, setBlob] = useState(null)
   const inputRef: any = useRef(null);
-  const [inputType, setInputType] = useState("text")
+
 
   useEffect(() => {
     socket.on("receive_message", (resData: any) => {
-      setClientHeight(clientHeight + 1000)
-      window.scrollTo({
-        top: clientHeight + 1000,
-        behavior: "smooth",
-      });
+      const lastElement = document.getElementById("lastElement") // scrolling to this element to see the last elememt
+      lastElement?.scrollIntoView()
     });
+
   }, [socket]);
-
-
   let sendMessage = (blob?: any) => {
-   console.log({blob})
+
+    console.log({ blob })
     let sendData = {
       message: inputValue,
       ...(blob && { blob: blob, blobType: blob.type.split('/')[0] }),
@@ -64,37 +56,19 @@ const ChatPage = (props: any) => {
       };
     });
     setInputValue("")
-    setClientHeight(clientHeight + 1000)
-
-    window.scrollTo({
-      top: clientHeight + 1000,
-
-      behavior: "smooth",
-    });
+    const lastElement = document.getElementById("lastElement") // scrolling to this element to see the last elememt
+    lastElement?.scrollIntoView(false)
   };
 
   const handleInputChange = (elm: any) => {
-    if (elm.type == "text") {
-      setInputValue(elm.value)
-
-    } else {
       const blobFile = inputRef.current.files[0]
-      console.log({ blobFile });
-
-      setBlob(blobFile)
       sendMessage(blobFile)
-      // setInputType("text")
-
     }
-    inputRef.current.type = "text"
 
-  }
+  
 
   const handleAttachFileClick = (e: any) => {
-    inputRef.current.type = "file"
     inputRef.current.click()
-
-
   }
 
 
@@ -122,6 +96,7 @@ const ChatPage = (props: any) => {
     color: "white",
     position: "absolute",
     top: "0%",
+    fontSize : "30px" ,
     right: "0%",
     cursor: "pointer",
     borderRadius: "0.2rem",
@@ -142,19 +117,15 @@ const ChatPage = (props: any) => {
           socket={socket}
         />
 
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-          }}
+        <div
+
+          className="chatCon"
         >
           {data[receiverId]?.map((d: any, i: number) => {
-            // console.log('m',d.blob);
 
             let newBlob = d.blob && new Blob([d.blob])
-            // console.log({newBlob});
 
             const url = newBlob && window.URL.createObjectURL(newBlob)
-            // console.log({url});
 
             return (
               <div
@@ -165,7 +136,7 @@ const ChatPage = (props: any) => {
                 key={i}
               >
 
-                <p
+                <div
                   className="message"
                   key={i}
                   style={{
@@ -226,89 +197,77 @@ const ChatPage = (props: any) => {
                       />
                     )}
                   </small>
-                </p>
+                </div>
               </div>
             );
           })}
 
-          <div className="send_message_con">
+        </div>
+        <span id="lastElement" ></span>
+
+        <form className="send_message_con"
+
+          onSubmit={(e) => {
+            e.preventDefault();
+          }}>
 
 
-            <div className="send_message_input_con">
-              <input
-                className="send_message_input"
-                value={inputValue}
-                ref={inputRef}
-                onChange={(e) => {
-                  handleInputChange(e.target)
-                }}
-                type="text"
-                placeholder="type somthing . . ."
-                autoFocus
-              />
-              <AttachFileIcon className="attachFileIcon_con_icon"
-                onClick={handleAttachFileClick}
-              />
-            </div>
-            <button
-              className="send_message_button"
-              type="submit"
-              onClick={(e) => sendMessage()}
-            >
-              <SendIcon />
-            </button>
-
+          <div className="send_message_input_con">
+            <input
+              className="send_message_input"
+              value={inputValue}
+              // ref={inputRef}
+              onChange={(e) => {
+                setInputValue(e.target.value)
+              }}
+              type="text"
+              placeholder="type somthing . . ."
+              autoFocus
+            />
+            <AttachFileIcon className="attachFileIcon_con_icon"
+              onClick={handleAttachFileClick}
+            />
+            <input type="file"
+              style={{ display: "none" }}
+              ref={inputRef}
+              onChange={(e) => {
+                handleInputChange(e.target)
+              }} />
           </div>
+          <button
+            className="send_message_button"
+            type="submit"
+            onClick={(e) => sendMessage()}
+          >
+            <SendIcon />
+          </button>
+
         </form>
       </div>
+
       <Dialog
         fullScreen
         open={openFullImage}
-        // scroll={"paper"}
-        // open={true}
         onClose={handleCloseFullImage}
-        // TransitionComponent={Transition}
+        onClick={handleCloseFullImage}
         sx={{
-          // background: "#273443",
-          // background: "rgba(0,0,0,0.2)",
-          "& .MuiPaper-root": {
-            // background: "#273443",
-            background: "rgba(0,0,0,0.2)",
 
+          "& .MuiPaper-root": {
+            background: "rgba(0,0,0,0.01)",
+            backdropFilter: "blur(4px)",
             color: "white",
             position: "relative",
 
           }
         }}
       >
-
-        <Toolbar sx={{ position: "fixed", zIndex: 10 }}>
-          <IconButton
-            edge="end"
-            onClick={handleCloseFullImage}
-            aria-label="close"
-          >
-            <CloseRoundedIcon
-              sx={{ color: "inherit", background : "white" , position: "fixed", right: "1rem", top: "1rem", borderRadius : "5rem"
-            , "& :hover": {
-color : "red"
-             }
-            }}
-            />
-          </IconButton>
-
-
-
-        </Toolbar>
-
-
-        <div 
+        <div
           style={{
-          width: "100vw",
-          position: "absolute",
-          top: "50%",
-          transform: "translate(0,-50%)",
-        }}>
+            width: "100vw",
+            position: "absolute",
+            top: "50%",
+            transform: "translate(0,-50%)",
+          }}>
           {dialogContent}
 
         </div>
