@@ -12,6 +12,7 @@ import AttachFileIcon from '@mui/icons-material/AttachFile';
 import DoneAllTwoToneIcon from "@mui/icons-material/DoneAllTwoTone";
 import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 
+
 const ChatPage = (props: any) => {
 
   const { socket, data, setData, ids, setIds }: any = props;
@@ -23,17 +24,17 @@ const ChatPage = (props: any) => {
 
   useEffect(() => {
     socket.on("receive_message", (resData: any) => {
-      const lastElement = document.getElementById("lastElement") // scrolling to this element to see the last elememt
+      const lastElement = document.getElementById("lastElement") // scrolling to this element to see the last message
       lastElement?.scrollIntoView()
     });
-
   }, [socket]);
+
   let sendMessage = (blob?: any) => {
 
-    console.log({ blob })
+    // console.log({ blob })
     let sendData = {
-      message: inputValue,
-      ...(blob && { blob: blob, blobType: blob.type.split('/')[0] }),
+      message: blob ? blob.name : inputValue,
+      ...(blob && { blob: blob, blobType: blob.type.split('/')[0], blobName: blob.name }),
       user,
       time: new Date().toLocaleTimeString(),
       id: socket.id,
@@ -57,16 +58,19 @@ const ChatPage = (props: any) => {
     });
 
     setInputValue("")
-    const lastElement = document.getElementById("lastElement") // scrolling to this element to see the last elememt
+    const lastElement = document.getElementById("lastElement") // scrolling to this element to see the last message
     lastElement?.scrollIntoView(false)
   };
 
-  const handleInputChange = (elm: any) => {
-      const blobFile = inputRef.current.files[0]
-      sendMessage(blobFile)
-    }
 
-  
+
+  const handleInputFileChange = (elm: any) => {
+
+    const blobFile = inputRef.current.files[0]
+    sendMessage(blobFile)
+    console.log({ blobFile });
+  }
+
 
   const handleAttachFileClick = (e: any) => {
     inputRef.current.click()
@@ -82,14 +86,13 @@ const ChatPage = (props: any) => {
     setOpenFullImage(!openFullImage)
   }
 
-  console.log({ dialogContent });
 
   // download file feature
 
-  const handleFileDownload = (url: any, fileType: string) => {
+  const handleFileDownload = (url: any, blobName: string) => {
     let a = document.createElement("a")
     a.href = url
-    a.setAttribute("download", `not_whatsapp_by_pri.${fileType}`)
+    a.setAttribute("download", blobName)
     a.click()
     a.style.display = "none"
   }
@@ -97,7 +100,7 @@ const ChatPage = (props: any) => {
     color: "white",
     position: "absolute",
     top: "0%",
-    fontSize : "30px" ,
+    fontSize: "30px",
     right: "0%",
     cursor: "pointer",
     borderRadius: "0.2rem",
@@ -124,7 +127,13 @@ const ChatPage = (props: any) => {
         >
           {data[receiverId]?.map((d: any, i: number) => {
 
-            let newBlob = d.blob && new Blob([d.blob])
+            const { id, user, message, blob, blobType, blobName, fromClient } = d
+
+            let time = d.time?.slice(0, 5)
+            time = time[time.length - 1] == ":" ? time.slice(0, 4) : time
+
+            let newBlob = blob && new Blob([d.blob])
+            console.log({ newBlob });
 
             const url = newBlob && window.URL.createObjectURL(newBlob)
 
@@ -132,7 +141,7 @@ const ChatPage = (props: any) => {
               <div
                 className="message_con"
                 style={{
-                  justifyContent: d.fromClient ? "flex-end" : "flex-start",
+                  justifyContent: fromClient ? "flex-end" : "flex-start",
                 }}
                 key={i}
               >
@@ -141,13 +150,14 @@ const ChatPage = (props: any) => {
                   className="message"
                   key={i}
                   style={{
-                    background: d.fromClient ? "#075E54" : "",
-                    textAlign: d.fromClient ? "right" : "left",
+                    background: fromClient ? "#075E54" : "",
+                    textAlign: fromClient ? "right" : "left",
+                    paddingRight: "2rem"
                   }}
                 >
-                  {d.message}
+                  {message}
                   {
-                    url && d.blobType == 'image' && (
+                    url && blobType == 'image' && (
                       <>
                         <img src={url} alt="image"
                           onClick={(e) => {
@@ -160,7 +170,21 @@ const ChatPage = (props: any) => {
                         />
                         <DownloadRoundedIcon
                           sx={downloadIconStyle}
-                          onClick={() => handleFileDownload(url, "png")}
+                          onClick={() => handleFileDownload(url, blobName)}
+                        />
+
+                      </>
+                    )
+
+                  }
+
+                  {
+                    url && blobType == 'audio' && (
+                      <>
+                        <audio src={url} controls></audio>
+                        <DownloadRoundedIcon
+                          sx={downloadIconStyle}
+                          onClick={() => handleFileDownload(url, blobName)}
                         />
 
                       </>
@@ -168,27 +192,38 @@ const ChatPage = (props: any) => {
 
                   }
                   {
-                    url && d.blobType == 'video' && (
+                    url && blobType == 'video' && (
                       <>
                         <video src={url} controls
                           onClick={(e) => {
-                            console.log(d.blobType)
-
-                            //  setDialogContent(e.currentTarget)
                             setDialogContent(<video src={url} controls></video>)
                             setOpenFullImage(!openFullImage)
                           }}></video>
                         <DownloadRoundedIcon
                           sx={downloadIconStyle}
-                          onClick={() => handleFileDownload(url, "mp4")}
+                          onClick={() => handleFileDownload(url, blobName)}
+                        />
+
+                      </>
+                    )
+                  }
+
+
+                  {
+                    url && !(blobType == "pri") && (
+                      <>
+
+                        <DownloadRoundedIcon
+                          sx={downloadIconStyle}
+                          onClick={() => handleFileDownload(url, blobName)}
                         />
 
                       </>
                     )
                   }
                   <small>
-                    {`${d.user}  -  ${d?.id?.slice(0, 2) || ""
-                      }  -  ${d?.time?.slice(0, 5)}`}{" "}
+                    {`${user}  -  ${id?.slice(0, 2) || ""
+                      }  -  ${time}`}{" "}
                     {d.fromClient && (
                       <DoneAllTwoToneIcon
                         sx={{
@@ -199,12 +234,15 @@ const ChatPage = (props: any) => {
                     )}
                   </small>
                 </div>
+
               </div>
             );
           })}
 
         </div>
+
         <span id="lastElement" ></span>
+
 
         <form className="send_message_con"
 
@@ -216,34 +254,41 @@ const ChatPage = (props: any) => {
           <div className="send_message_input_con">
             <input
               className="send_message_input"
-              value={inputValue}
+              value={inputValue || ""}
               // ref={inputRef}
-              onChange={(e) => {
+              onChange={(e: any) => {
                 setInputValue(e.target.value)
               }}
               type="text"
               placeholder="type somthing . . ."
               autoFocus
             />
+
             <AttachFileIcon className="attachFileIcon_con_icon"
               onClick={handleAttachFileClick}
             />
+
             <input type="file"
               style={{ display: "none" }}
               ref={inputRef}
               onChange={(e) => {
-                handleInputChange(e.target)
+                handleInputFileChange(e.target)
               }} />
+
           </div>
+
           <button
             className="send_message_button"
             type="submit"
             onClick={(e) => sendMessage()}
           >
             <SendIcon />
+
           </button>
 
+
         </form>
+
       </div>
 
       <Dialog
@@ -254,10 +299,10 @@ const ChatPage = (props: any) => {
         sx={{
 
           "& .MuiPaper-root": {
-            background: "rgba(0,0,0,0.01)",
             backdropFilter: "blur(4px)",
             color: "white",
             position: "relative",
+            background: "rgba(0,0,0,0.01)",
 
           }
         }}
