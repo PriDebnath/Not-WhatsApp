@@ -33,7 +33,7 @@ const ChatPage = (props: any) => {
 
     // console.log({ blob })
     let sendData = {
-      message: blob ? blob.name : inputValue ,
+      message: blob ? blob.name : inputValue,
       ...(blob && { blob: blob, blobType: blob.type.split('/')[0], blobName: blob.name }),
       user,
       time: new Date().toLocaleTimeString(),
@@ -126,8 +126,12 @@ const ChatPage = (props: any) => {
         >
           {data[receiverId]?.map((d: any, i: number) => {
 
-            const { blobType, blobName, fromClient } = d
-            let newBlob = d.blob && new Blob([d.blob])
+            const { id, user, message, blob, blobType, blobName, fromClient } = d
+
+            let time = d.time?.slice(0, 5)
+            time = time[time.length - 1] == ":" ? time.slice(0, 4) : time
+
+            let newBlob = blob && new Blob([d.blob])
             console.log({ newBlob });
 
             const url = newBlob && window.URL.createObjectURL(newBlob)
@@ -147,10 +151,10 @@ const ChatPage = (props: any) => {
                   style={{
                     background: fromClient ? "#075E54" : "",
                     textAlign: fromClient ? "right" : "left",
-                    paddingRight : "2rem"
+                    paddingRight: "2rem"
                   }}
                 >
-                  {d.message}
+                  {message}
                   {
                     url && blobType == 'image' && (
                       <>
@@ -217,8 +221,8 @@ const ChatPage = (props: any) => {
                     )
                   }
                   <small>
-                    {`${d.user}  -  ${d?.id?.slice(0, 2) || ""
-                      }  -  ${d?.time?.slice(0, 5)}`}{" "}
+                    {`${user}  -  ${id?.slice(0, 2) || ""
+                      }  -  ${time}`}{" "}
                     {d.fromClient && (
                       <DoneAllTwoToneIcon
                         sx={{
