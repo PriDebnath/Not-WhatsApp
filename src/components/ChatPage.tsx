@@ -56,6 +56,7 @@ const ChatPage = (props: any) => {
           : [{ ...sendData, fromClient: true }],
       };
     });
+
     setInputValue("")
     const lastElement = document.getElementById("lastElement") // scrolling to this element to see the last message
     lastElement?.scrollIntoView(false)
