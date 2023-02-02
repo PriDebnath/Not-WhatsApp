@@ -232,6 +232,7 @@ display: flex;
   outline: white;
   background: var(--brand-gray);
   border-radius: 5rem;
+  box-shadow:  0 0 0.4rem rgba(0, 0, 0, 0.8);
 }
 
 
@@ -265,6 +266,8 @@ display: flex;
   justify-content: center;
   padding: 0.5rem;
   margin: 1%;
+  box-shadow:  0 0 0.4rem rgba(0, 0, 0, 0.8);
+
 }
 
 @media screen and (max-width: 600px) {
