@@ -1,14 +1,15 @@
 import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import io from "socket.io-client";
+
 //components
 import ChatPage from "./components/ChatPage";
 import Home from "./components/Home";
-import io from "socket.io-client";
 
 //urls
 import URLS from "./urls";
-
 import authHelpers from "./authHelpers";
+
 
 const socket = io(URLS.SERVER_URL);
 
@@ -29,8 +30,9 @@ function App() {
   const [statusText, setStatusText] = useState(
    ""
   );
-
   let user = authHelpers.getDataFromLocalStorage("user") || "guest";
+  
+  // adding new data and re-rendering component whenever it receives any data 
 
   useEffect(() => {
     socket.on("receive_message", (resData) => {
@@ -47,18 +49,24 @@ function App() {
     });
   }, [socket]);
 
+
   let [ids, setIds]: any = useState({});
+
+  // geting all  online users 
+
   useEffect(() => {
     fetch(URLS.SERVER_URL)
       .then((res) => res.json())
       .then((data) => {
-        delete data[socket.id];
+        delete data[socket.id]; // remove the current user
         setIds(data);
       })
       .catch((error) => {
         console.log(error);
       });
   }, []);
+
+  // sending alert as user-joined
 
   useEffect(() => {
     try {
@@ -106,7 +114,6 @@ function App() {
         />
       </Routes>
 
-      <></>
     </BrowserRouter>
   );
 }

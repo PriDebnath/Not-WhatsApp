@@ -1,3 +1,6 @@
+
+
+@import url('https://fonts.googleapis.com/css2?family=Andika&display=swap');
 /* Hide scrollbar for Chrome, Safari and Opera */
 *::-webkit-scrollbar {
   display: none;
@@ -10,6 +13,10 @@
   scrollbar-width: none;
   box-sizing: border-box;
   /* Firefox */
+}
+*::first-letter{
+  text-transform: uppercase;
+
 }
 
 :root {
@@ -29,6 +36,8 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background: var(--brand-black);
   background: url("./assets/wa-bg-dark.jpg");
+  font-family: 'Andika', sans-serif;
+
 
   /* background: url("./assets/HD-wallpaper-whatsapp-background-cool-dark-green-new-theme-whatsapp.jpg"); */
 }
@@ -39,7 +48,8 @@ body {
   display: block;
   cursor: pointer;
 }
-
+ 
+ /* navbar */
 .nav {
   z-index: 2;
   position: fixed;
@@ -49,13 +59,28 @@ body {
 }
 
 .appBar_div {
-  /* background: red; */
-  display: flex;
+  /* display: flex; */
+  /* justify-content: space-between; */
+  /* align-items: center; */
+  padding: 3px;
+ width: 100%; 
 
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
 }
+
+.appBar_div_sender{
+   width: 80%; 
+
+}
+.appBar_div_sender_users{
+  width: 50vw;
+  overflow:auto ; 
+  /* text-overflow: ellipsis; */
+   font-size: 12px; 
+  padding: 0;
+  white-space: nowrap; /* important property*/
+
+}
+
 
 nav {
   position: fixed;

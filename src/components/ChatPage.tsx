@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useParams } from "react-router-dom";
 import authHelpers from "../authHelpers";
+
 import Nav from "./Nav";
 import Dialog from '@mui/material/Dialog';
 import Button from '@mui/material/Button';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
-//icons
 import SendIcon from "@mui/icons-material/Send";
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import DoneAllTwoToneIcon from "@mui/icons-material/DoneAllTwoTone";
@@ -16,18 +16,20 @@ import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 const ChatPage = (props: any) => {
 
   const { socket, data, setData, ids, setIds }: any = props;
+
   const user = authHelpers.getDataFromLocalStorage("user") || "guest";
   const { receiverId }: any = useParams();
   const [inputValue, setInputValue] = useState("");
   const inputRef: any = useRef(null);
 
-
+  // scrolling to last element whenever receives any data
   useEffect(() => {
     socket.on("receive_message", (resData: any) => {
-      const lastElement = document.getElementById("lastElement") // scrolling to this element to see the last message
+      const lastElement = document.getElementById("lastElement") // scrolling to last element to see the last message
       lastElement?.scrollIntoView()
     });
   }, [socket]);
+
 
   let sendMessage = (blob?: any) => {
 
@@ -58,14 +60,13 @@ const ChatPage = (props: any) => {
     });
 
     setInputValue("")
-    const lastElement = document.getElementById("lastElement") // scrolling to this element to see the last message
+    const lastElement = document.getElementById("lastElement") // scrolling to last element to see the last message
     lastElement?.scrollIntoView(false)
   };
 
 
 
   const handleInputFileChange = (elm: any) => {
-
     const blobFile = inputRef.current.files[0]
     sendMessage(blobFile)
     console.log({ blobFile });
@@ -79,7 +80,7 @@ const ChatPage = (props: any) => {
 
   // opening media on fullscreen
 
-  const [dialogContent, setDialogContent]: any = useState(<h1 style={{ textAlign: "center" }}>Couldn't find Content</h1>)
+  const [dialogContent, setDialogContent]: any = useState(<h1 style={{ textAlign: "center" }}>Couldn't Find Content</h1>)
   const [openFullImage, setOpenFullImage] = useState(false)
 
   const handleCloseFullImage = () => {
@@ -96,6 +97,7 @@ const ChatPage = (props: any) => {
     a.click()
     a.style.display = "none"
   }
+
   const downloadIconStyle = {
     color: "white",
     position: "absolute",
@@ -131,10 +133,8 @@ const ChatPage = (props: any) => {
 
             let time = d.time?.slice(0, 5)
             time = time[time.length - 1] == ":" ? time.slice(0, 4) : time
-
+            
             let newBlob = blob && new Blob([d.blob])
-            console.log({ newBlob });
-
             const url = newBlob && window.URL.createObjectURL(newBlob)
 
             return (
