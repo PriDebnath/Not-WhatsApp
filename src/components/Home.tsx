@@ -12,26 +12,29 @@ import URLS from "../urls";
 let Home = (props: any) => {
   const { socket, data, setData, ids, setIds, statusText, setStatusText }: any =
     props;
+
   try {
     socket.connect();
   } catch (error) {
     console.log(error);
   }
- 
+  
+  // adding new data and re-rendering component whenever it receives any data 
+
   useEffect(() => {
     fetch(URLS.SERVER_URL)
       .then((res) => res.json())
       .then((data) => {
         delete data[socket.id];
         setIds(data);
-        setStatusText( "Available member will list here");
+        setStatusText("Available member will list here");
       })
       .catch((error) => {
-        setStatusText("Server is off , ask  Pri to turn it on");
+        setStatusText("Server is off, ask  Pri to turn it on");
         console.log({ error });
       });
   }, [socket, data]);
-  
+
   return (
     <List sx={{ width: "100%", bgcolor: "#131e1e", minHeight: "100vh" }}>
       {Object.values(ids).map((id: any, i: number) => {
