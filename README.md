@@ -1,3 +1,3 @@
-## Not-WhatsApp - Hosted link
+## Hosted link
 
 ### https://notwhatsappbypri.netlify.app/
